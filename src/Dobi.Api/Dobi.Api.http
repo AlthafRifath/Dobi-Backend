@@ -1,0 +1,6 @@
+@Dobi.Api_HostAddress = http://localhost:5225
+
+GET {{Dobi.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

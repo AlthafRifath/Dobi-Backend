@@ -1,0 +1,21 @@
+.vs/
+bin/
+obj/
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+
+# Build output
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Environment and secrets
+.env
+appsettings.Development.json

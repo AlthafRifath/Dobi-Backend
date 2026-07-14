@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Dobi.Api/Dobi.Api.csproj" />
+    <Project Path="src/Dobi.Application/Dobi.Application.csproj" />
+    <Project Path="src/Dobi.Contracts/Dobi.Contracts.csproj" />
+    <Project Path="src/Dobi.Domain/Dobi.Domain.csproj" />
+    <Project Path="src/Dobi.Infrastructure/Dobi.Infrastructure.csproj" />
+    <Project Path="src/Dobi.Shared/Dobi.Shared.csproj" />
+  </Folder>
+</Solution>
