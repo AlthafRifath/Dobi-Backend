@@ -1,7 +1,10 @@
-﻿using Dobi.Application.Features.Auth.Login;
+﻿using Dobi.Application.Features.Auth.GetCurrentUser;
+using Dobi.Application.Features.Auth.Login;
+using Dobi.Application.Features.Auth.RefreshToken;
 using Dobi.Contracts.Auth;
 using Dobi.Contracts.Common;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +39,42 @@ namespace Dobi.Api.Controllers
             return Ok(ApiResponse<LoginResponse>.Ok(
                 response,
                 "Login successful."));
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<ApiResponse<UserResponse>>> Me(
+            CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(
+                new GetCurrentUserQuery(),
+                cancellationToken);
+
+            return Ok(ApiResponse<UserResponse>.Ok(
+                response,
+                "Current user loaded successfully."));
+        }
+
+        [HttpPost("refresh-token")]
+        [ProducesResponseType(typeof(ApiResponse<LoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult<ApiResponse<LoginResponse>>> RefreshToken(
+            [FromBody] RefreshTokenRequest request,
+            CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(
+                new RefreshTokenCommand(
+                    request.UserId,
+                    request.RefreshToken),
+                cancellationToken);
+
+            return Ok(ApiResponse<LoginResponse>.Ok(
+                response,
+                "Token refreshed successfully."));
         }
     }
 }
