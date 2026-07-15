@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dobi.Shared.Pagination;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -33,6 +34,15 @@ namespace Dobi.Application.Abstractions.Authentication
 
         Task<IdentityUserInfo> CreateUserAsync(
             CreateIdentityUserRequest request,
+            CancellationToken cancellationToken = default);
+
+        Task<PagedResult<IdentityUserInfo>> GetUsersAsync(
+            PageRequest pageRequest,
+            CancellationToken cancellationToken = default);
+
+        Task<IdentityUserInfo?> UpdateUserStatusAsync(
+            int userId,
+            bool isActive,
             CancellationToken cancellationToken = default);
     }
 }

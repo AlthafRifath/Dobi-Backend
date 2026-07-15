@@ -1,7 +1,9 @@
 ﻿using Dobi.Application.Abstractions.Authentication;
 using Dobi.Infrastructure.Identity;
 using Dobi.Shared.Exceptions;
+using Dobi.Shared.Pagination;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -146,6 +148,81 @@ namespace Dobi.Infrastructure.Authentication
                     var errors = string.Join(", ", roleResult.Errors.Select(x => x.Description));
                     throw new BadRequestException($"Failed to assign role '{role}': {errors}");
                 }
+            }
+
+            return new IdentityUserInfo(
+                user.Id,
+                user.FullName,
+                user.UserName ?? string.Empty,
+                user.Email,
+                user.PhoneNumber,
+                user.IsActive,
+                user.DefaultBranchId,
+                user.DefaultPlantId);
+        }
+
+        public async Task<PagedResult<IdentityUserInfo>> GetUsersAsync(
+            PageRequest pageRequest,
+            CancellationToken cancellationToken = default)
+        {
+            var query = _userManager.Users.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(pageRequest.SearchTerm))
+            {
+                var searchTerm = pageRequest.SearchTerm.Trim().ToLower();
+
+                query = query.Where(user =>
+                    user.FullName.ToLower().Contains(searchTerm) ||
+                    (user.UserName != null && user.UserName.ToLower().Contains(searchTerm)) ||
+                    (user.Email != null && user.Email.ToLower().Contains(searchTerm)) ||
+                    (user.PhoneNumber != null && user.PhoneNumber.ToLower().Contains(searchTerm)));
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var users = await query
+                .OrderBy(user => user.FullName)
+                .Skip((pageRequest.PageNumber - 1) * pageRequest.PageSize)
+                .Take(pageRequest.PageSize)
+                .Select(user => new IdentityUserInfo(
+                    user.Id,
+                    user.FullName,
+                    user.UserName ?? string.Empty,
+                    user.Email,
+                    user.PhoneNumber,
+                    user.IsActive,
+                    user.DefaultBranchId,
+                    user.DefaultPlantId))
+                .ToArrayAsync(cancellationToken);
+
+            return new PagedResult<IdentityUserInfo>(
+                users,
+                totalCount,
+                pageRequest.PageNumber,
+                pageRequest.PageSize);
+        }
+
+        public async Task<IdentityUserInfo?> UpdateUserStatusAsync(
+            int userId,
+            bool isActive,
+            CancellationToken cancellationToken = default)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user is null)
+            {
+                return null;
+            }
+
+            user.IsActive = isActive;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(x => x.Description));
+                throw new BadRequestException($"Failed to update user status: {errors}");
             }
 
             return new IdentityUserInfo(
