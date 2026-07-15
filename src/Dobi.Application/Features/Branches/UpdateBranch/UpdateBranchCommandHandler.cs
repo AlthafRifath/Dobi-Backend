@@ -1,0 +1,71 @@
+﻿using Dobi.Application.Abstractions.Persistence;
+using Dobi.Application.Abstractions.Services;
+using Dobi.Contracts.Branches;
+using Dobi.Shared.Exceptions;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Dobi.Application.Features.Branches.UpdateBranch
+{
+    public sealed class UpdateBranchCommandHandler
+    : IRequestHandler<UpdateBranchCommand, BranchResponse>
+    {
+        private readonly IDobiDbContext _dbContext;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IDateTimeProvider _dateTimeProvider;
+
+        public UpdateBranchCommandHandler(
+            IDobiDbContext dbContext,
+            ICurrentUserService currentUserService,
+            IDateTimeProvider dateTimeProvider)
+        {
+            _dbContext = dbContext;
+            _currentUserService = currentUserService;
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+        public async Task<BranchResponse> Handle(
+            UpdateBranchCommand request,
+            CancellationToken cancellationToken)
+        {
+            var branch = await _dbContext.Branches
+                .FirstOrDefaultAsync(x => x.Id == request.BranchId, cancellationToken);
+
+            if (branch is null)
+            {
+                throw new NotFoundException("Branch", request.BranchId);
+            }
+
+            var branchName = request.BranchName.Trim();
+
+            var duplicateExists = await _dbContext.Branches.AnyAsync(
+                x => x.Id != request.BranchId &&
+                     x.BranchName.ToLower() == branchName.ToLower(),
+                cancellationToken);
+
+            if (duplicateExists)
+            {
+                throw new ConflictException("A branch with the same name already exists.");
+            }
+
+            branch.BranchName = branchName;
+            branch.Address = string.IsNullOrWhiteSpace(request.Address) ? null : request.Address.Trim();
+            branch.ContactNo = string.IsNullOrWhiteSpace(request.ContactNo) ? null : request.ContactNo.Trim();
+            branch.IsActive = request.IsActive;
+            branch.UpdatedAt = _dateTimeProvider.UtcNow;
+            branch.UpdatedByUserId = _currentUserService.UserId;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return new BranchResponse(
+                branch.Id,
+                branch.BranchName,
+                branch.Address,
+                branch.ContactNo,
+                branch.IsActive);
+        }
+    }
+}

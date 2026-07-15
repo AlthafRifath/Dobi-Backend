@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dobi.Contracts.PlantProcessing
+namespace Dobi.Contracts.Plants
 {
     public sealed record PlantResponse(
         int PlantId,
