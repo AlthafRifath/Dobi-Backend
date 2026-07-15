@@ -19,7 +19,6 @@
     <Folder Include="Features\Payments\" />
     <Folder Include="Features\PlantProcessing\" />
     <Folder Include="Features\Transfers\" />
-    <Folder Include="Features\Orders\" />
     <Folder Include="Common\" />
   </ItemGroup>
 
