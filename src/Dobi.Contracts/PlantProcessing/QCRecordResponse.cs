@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Dobi.Contracts.PlantProcessing;
 
-namespace Dobi.Contracts.PlantProcessing
-{
-    public sealed record QCRecordResponse(
-        int QCRecordId,
-        int? OrderItemId,
-        int QCStatusId,
-        string QCStatusName,
-        string? IssueDescription,
-        string? ActionTaken,
-        decimal? LabourChargeAmount,
-        int RecordedByUserId,
-        DateTime RecordedAt);
-}
+public sealed record QcRecordResponse(
+    int QcRecordId,
+    int? OrderItemId,
+    int QcStatusId,
+    string QcStatusName,
+    string? IssueDescription,
+    string? ActionTaken,
+    decimal? LabourChargeAmount,
+    int RecordedByUserId,
+    DateTime RecordedAt);
