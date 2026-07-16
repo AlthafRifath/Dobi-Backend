@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Dobi.Infrastructure.Persistence.Configurations.Auditing
 {
-    public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
+    public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
     {
         public void Configure(EntityTypeBuilder<AuditLog> builder)
         {
@@ -19,43 +19,31 @@ namespace Dobi.Infrastructure.Persistence.Configurations.Auditing
             builder.Property(x => x.Id)
                 .HasColumnName("AuditLogId");
 
-            builder.Property(x => x.Action)
-                .HasMaxLength(100)
-                .IsRequired();
-
             builder.Property(x => x.EntityName)
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(x => x.EntityId)
-                .HasMaxLength(50);
+            builder.Property(x => x.Action)
+                .HasMaxLength(50)
+                .IsRequired();
 
-            builder.Property(x => x.OldValue)
+            builder.Property(x => x.OldValues)
                 .HasColumnType("jsonb");
 
-            builder.Property(x => x.NewValue)
+            builder.Property(x => x.NewValues)
                 .HasColumnType("jsonb");
 
             builder.Property(x => x.IpAddress)
-                .HasMaxLength(50);
+                .HasMaxLength(100);
 
-            builder.Property(x => x.CreatedAt)
-                .IsRequired();
-
-            builder.HasOne<ApplicationUser>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasIndex(x => x.UserId);
-
-            builder.HasIndex(x => x.Action);
+            builder.Property(x => x.UserAgent)
+                .HasMaxLength(500);
 
             builder.HasIndex(x => x.EntityName);
-
             builder.HasIndex(x => x.EntityId);
-
-            builder.HasIndex(x => x.CreatedAt);
+            builder.HasIndex(x => x.Action);
+            builder.HasIndex(x => x.PerformedByUserId);
+            builder.HasIndex(x => x.PerformedAt);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Dobi.Application.Abstractions.Authentication;
 using Dobi.Application.Abstractions.Persistence;
 using Dobi.Application.Abstractions.Services;
+using Dobi.Infrastructure.Auditing;
 using Dobi.Infrastructure.Authentication;
 using Dobi.Infrastructure.Identity;
 using Dobi.Infrastructure.Notifications;
@@ -60,6 +61,7 @@ namespace Dobi.Infrastructure
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<ISmsSender, DevelopmentSmsSender>();
+            services.AddScoped<IAuditLogService, AuditLogService>();
 
             return services;
         }
