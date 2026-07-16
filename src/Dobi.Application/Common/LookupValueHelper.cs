@@ -30,7 +30,10 @@ public static class LookupValueHelper
                    "QCStatusCode",
                    "QcStatusCode",
 
-                   "CollectionModeCode")
+                   "CollectionModeCode",
+
+                   "NotificationTypeCode",
+                   "NotificationStatusCode")
                ?? entity.GetType().Name;
     }
 
@@ -62,7 +65,10 @@ public static class LookupValueHelper
                    "QCStatusName",
                    "QcStatusName",
 
-                   "CollectionModeName")
+                   "CollectionModeName",
+
+                   "NotificationTypeName",
+                   "NotificationStatusName")
                ?? GetCode(entity);
     }
 

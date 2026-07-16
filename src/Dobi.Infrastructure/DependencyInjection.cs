@@ -3,6 +3,7 @@ using Dobi.Application.Abstractions.Persistence;
 using Dobi.Application.Abstractions.Services;
 using Dobi.Infrastructure.Authentication;
 using Dobi.Infrastructure.Identity;
+using Dobi.Infrastructure.Notifications;
 using Dobi.Infrastructure.Persistence;
 using Dobi.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -58,6 +59,7 @@ namespace Dobi.Infrastructure
             services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+            services.AddScoped<ISmsSender, DevelopmentSmsSender>();
 
             return services;
         }
