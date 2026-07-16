@@ -5,9 +5,12 @@ using System.Text;
 namespace Dobi.Contracts.Reports
 {
     public sealed record DailyRevenueReportResponse(
-        DateOnly ReportDate,
-        decimal TotalRevenue,
-        int PaidOrderCount,
-        int UnpaidOrderCount,
-        IReadOnlyCollection<DailyRevenueReportItemResponse> Items);
+        DateOnly Date,
+        decimal CashAmount,
+        decimal CardAmount,
+        decimal BankTransferAmount,
+        decimal ChequeClearedAmount,
+        decimal TotalPaidAmount,
+        decimal RefundedAmount,
+        decimal NetRevenue);
 }
