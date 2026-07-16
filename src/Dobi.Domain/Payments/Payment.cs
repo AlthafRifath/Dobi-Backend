@@ -24,6 +24,14 @@ namespace Dobi.Domain.Payments
 
         public string? ReferenceNo { get; set; }
 
+        public string? ChequeNo { get; set; }
+        public string? ChequeBankName { get; set; }
+        public DateOnly? ChequeDate { get; set; }
+
+        public DateTime? ChequeClearedAt { get; set; }
+        public DateTime? ChequeRejectedAt { get; set; }
+        public string? ChequeRejectionReason { get; set; }
+
         public ICollection<Refund> Refunds { get; set; } = new List<Refund>();
     }
 }

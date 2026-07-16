@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dobi.Contracts.Payments
+namespace Dobi.Contracts.Refunds
 {
     public sealed record CreateRefundRequest(
-        int OrderId,
         int? PaymentId,
         decimal Amount,
         string Reason);

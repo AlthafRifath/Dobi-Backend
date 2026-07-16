@@ -22,5 +22,9 @@ namespace Dobi.Domain.Payments
 
         public int? ApprovedByUserId { get; set; }
         public DateTime? RefundedAt { get; set; }
+
+        public int? RejectedByUserId { get; set; }
+        public DateTime? RejectedAt { get; set; }
+        public string? RejectionReason { get; set; }
     }
 }

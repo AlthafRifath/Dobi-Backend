@@ -30,6 +30,15 @@ namespace Dobi.Infrastructure.Persistence.Configurations.Payments
             builder.Property(x => x.ReferenceNo)
                 .HasMaxLength(100);
 
+            builder.Property(x => x.ChequeNo)
+                .HasMaxLength(50);
+
+            builder.Property(x => x.ChequeBankName)
+                .HasMaxLength(150);
+
+            builder.Property(x => x.ChequeRejectionReason)
+                .HasMaxLength(500);
+
             builder.Property(x => x.CreatedAt)
                 .IsRequired();
 

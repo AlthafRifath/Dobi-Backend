@@ -8,6 +8,7 @@ using Dobi.Domain.PlantProcessing;
 using Dobi.Domain.Services;
 using Dobi.Domain.Transfers;
 using Dobi.Infrastructure.Identity;
+using Dobi.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -308,26 +309,44 @@ namespace Dobi.Infrastructure.Persistence.Seed
                 new PaymentStatus
                 {
                     Id = 1,
-                    StatusCode = "UNPAID",
+                    StatusCode = PaymentStatusCodes.Unpaid,
                     StatusName = "Unpaid"
                 },
                 new PaymentStatus
                 {
                     Id = 2,
-                    StatusCode = "PAID",
+                    StatusCode = PaymentStatusCodes.Paid,
                     StatusName = "Paid"
                 },
                 new PaymentStatus
                 {
                     Id = 3,
-                    StatusCode = "REFUNDED",
+                    StatusCode = PaymentStatusCodes.Refunded,
                     StatusName = "Refunded"
                 },
                 new PaymentStatus
                 {
                     Id = 4,
-                    StatusCode = "FAILED",
+                    StatusCode = PaymentStatusCodes.Failed,
                     StatusName = "Failed"
+                },
+                new PaymentStatus
+                {
+                    Id = 5,
+                    StatusCode = PaymentStatusCodes.PendingClearance,
+                    StatusName = "Pending Clearance"
+                },
+                new PaymentStatus
+                {
+                    Id = 6,
+                    StatusCode = PaymentStatusCodes.PartiallyPaid,
+                    StatusName = "Partially Paid"
+                },
+                new PaymentStatus
+                {
+                    Id = 7,
+                    StatusCode = PaymentStatusCodes.PartiallyPaidPendingClearance,
+                    StatusName = "Partially Paid - Pending Clearance"
                 }
             );
         }
@@ -540,20 +559,26 @@ namespace Dobi.Infrastructure.Persistence.Seed
                 new PaymentMethod
                 {
                     Id = 1,
-                    MethodCode = "CASH",
+                    MethodCode = PaymentMethodCodes.Cash,
                     MethodName = "Cash"
                 },
                 new PaymentMethod
                 {
                     Id = 2,
-                    MethodCode = "CARD",
+                    MethodCode = PaymentMethodCodes.Card,
                     MethodName = "Card"
                 },
                 new PaymentMethod
                 {
                     Id = 3,
-                    MethodCode = "BANK_TRANSFER",
+                    MethodCode = PaymentMethodCodes.BankTransfer,
                     MethodName = "Bank Transfer"
+                },
+                new PaymentMethod
+                {
+                    Id = 4,
+                    MethodCode = PaymentMethodCodes.Cheque,
+                    MethodName = "Cheque"
                 }
             );
         }

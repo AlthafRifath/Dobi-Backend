@@ -27,6 +27,9 @@ namespace Dobi.Infrastructure.Persistence.Configurations.Payments
                 .HasMaxLength(500)
                 .IsRequired();
 
+            builder.Property(x => x.RejectionReason)
+                .HasMaxLength(500);
+
             builder.Property(x => x.ApprovedByUserId);
 
             builder.Property(x => x.RefundedAt);

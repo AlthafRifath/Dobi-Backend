@@ -15,6 +15,9 @@ public static class LookupValueHelper
 
                    "CustomerTypeCode",
 
+                   "MethodCode",
+                   "PaymentMethodCode",
+
                    "TransferTypeCode",
                    "TransferStatusCode",
                    "AcknowledgementTypeCode",
@@ -43,6 +46,9 @@ public static class LookupValueHelper
                    "PaymentStatusName",
 
                    "CustomerTypeName",
+
+                   "MethodName",
+                   "PaymentMethodName",
 
                    "TransferTypeName",
                    "TransferStatusName",

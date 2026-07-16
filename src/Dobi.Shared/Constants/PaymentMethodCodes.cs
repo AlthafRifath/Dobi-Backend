@@ -9,5 +9,6 @@ namespace Dobi.Shared.Constants
         public const string Cash = "CASH";
         public const string Card = "CARD";
         public const string BankTransfer = "BANK_TRANSFER";
+        public const string Cheque = "CHEQUE";
     }
 }
