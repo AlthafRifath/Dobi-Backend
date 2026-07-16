@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Dobi.Contracts.Collections;
+using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dobi.Contracts.Collections
+namespace Dobi.Application.Features.Collections.CompleteOrderCollection
 {
-    public sealed record CompleteOrderCollectionRequest(
+    public sealed record CompleteOrderCollectionCommand(
+        int OrderId,
         bool IsCollectedByCustomer,
         string? CollectorName,
         string? CollectorMobileNo,
@@ -12,5 +15,5 @@ namespace Dobi.Contracts.Collections
         bool MobileNoVerified,
         string? ReceiptImageUrl,
         string? CustomerSignatureUrl,
-        string? Remarks);
+        string? Remarks) : IRequest<OrderCollectionResponse>;
 }

@@ -25,7 +25,9 @@ public static class LookupValueHelper
                    "ProcessingStageStatusCode",
 
                    "QCStatusCode",
-                   "QcStatusCode")
+                   "QcStatusCode",
+
+                   "CollectionModeCode")
                ?? entity.GetType().Name;
     }
 
@@ -52,7 +54,9 @@ public static class LookupValueHelper
                    "ProcessingStageStatusName",
 
                    "QCStatusName",
-                   "QcStatusName")
+                   "QcStatusName",
+
+                   "CollectionModeName")
                ?? GetCode(entity);
     }
 
