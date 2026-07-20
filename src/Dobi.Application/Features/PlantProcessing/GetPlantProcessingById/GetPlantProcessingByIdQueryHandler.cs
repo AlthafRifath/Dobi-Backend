@@ -27,6 +27,18 @@ namespace Dobi.Application.Features.PlantProcessing.GetPlantProcessingById
                 .AsNoTracking()
                 .Include(x => x.Order)
                     .ThenInclude(x => x.CurrentStatus)
+                .Include(x => x.Order)
+                    .ThenInclude(x => x.Items)
+                        .ThenInclude(x => x.Service)
+                .Include(x => x.Order)
+                    .ThenInclude(x => x.Items)
+                        .ThenInclude(x => x.ItemCategory)
+                .Include(x => x.Order)
+                    .ThenInclude(x => x.Items)
+                        .ThenInclude(x => x.PricingType)
+                .Include(x => x.Order)
+                    .ThenInclude(x => x.Items)
+                        .ThenInclude(x => x.Tags)
                 .Include(x => x.Plant)
                 .Include(x => x.OverallQCStatus)
                 .Include(x => x.StageUpdates)
@@ -35,7 +47,9 @@ namespace Dobi.Application.Features.PlantProcessing.GetPlantProcessingById
                     .ThenInclude(x => x.ProcessingStageStatus)
                 .Include(x => x.QCRecords)
                     .ThenInclude(x => x.QCStatus)
-                .FirstOrDefaultAsync(x => x.Id == request.PlantProcessingId, cancellationToken);
+                .FirstOrDefaultAsync(
+                    x => x.Id == request.PlantProcessingId,
+                    cancellationToken);
 
             if (processing is null)
             {

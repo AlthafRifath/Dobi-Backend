@@ -3,19 +3,29 @@
 public sealed record PlantProcessingResponse(
     int PlantProcessingId,
     int OrderId,
-    string OrderNo,
+    string? OrderNo,
+
     int PlantId,
-    string PlantName,
+    string? PlantName,
+
     DateTime? ReceivedAtPlant,
     DateOnly? ReadyDate,
-    int? OverallQcStatusId,
-    string? OverallQcStatusName,
+
+    int? OverallQCStatusId,
+    string? OverallQCStatusName,
+
     string? PlantRemarks,
+
     int CurrentOrderStatusId,
-    string CurrentOrderStatusName,
+    string? CurrentOrderStatusName,
+
     int? LatestProcessingStageId,
     string? LatestProcessingStageName,
+
     int? LatestProcessingStageStatusId,
     string? LatestProcessingStageStatusName,
-    IReadOnlyCollection<PlantProcessingStageUpdateResponse> StageUpdates,
-    IReadOnlyCollection<QcRecordResponse> QcRecords);
+
+    IReadOnlyCollection<PlantProcessingStageUpdateResponse>? StageUpdates,
+    IReadOnlyCollection<QcRecordResponse>? QcRecords,
+
+    IReadOnlyCollection<PlantProcessingOrderItemResponse>? OrderItems = null);
