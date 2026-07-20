@@ -1,5 +1,6 @@
 ﻿using Dobi.Application.Features.Orders.CancelOrder;
 using Dobi.Application.Features.Orders.CreateOrder;
+using Dobi.Application.Features.Orders.GetEligibleOutletReturnOrders;
 using Dobi.Application.Features.Orders.GetEligiblePlantTransferOrders;
 using Dobi.Application.Features.Orders.GetOrderById;
 using Dobi.Application.Features.Orders.GetOrders;
@@ -127,6 +128,31 @@ public sealed class OrdersController : ControllerBase
         return Ok(ApiResponse<PagedResponse<EligiblePlantTransferOrderResponse>>.Ok(
             response,
             "Eligible plant transfer orders loaded successfully."));
+    }
+
+    [HttpGet("eligible-for-outlet-return")]
+    public async Task<ActionResult<ApiResponse<PagedResponse<EligibleOutletReturnOrderResponse>>>> GetEligibleForOutletReturn(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string? searchTerm = null,
+    [FromQuery] int fromPlantId = 0,
+    [FromQuery] int toBranchId = 0,
+    [FromQuery] int[]? excludeOrderIds = null,
+    CancellationToken cancellationToken = default)
+    {
+        var response = await _mediator.Send(
+            new GetEligibleOutletReturnOrdersQuery(
+                pageNumber,
+                pageSize,
+                searchTerm,
+                fromPlantId,
+                toBranchId,
+                excludeOrderIds ?? Array.Empty<int>()),
+            cancellationToken);
+
+        return Ok(ApiResponse<PagedResponse<EligibleOutletReturnOrderResponse>>.Ok(
+            response,
+            "Eligible outlet return orders loaded successfully."));
     }
 
     [Authorize(Roles = OrderWriteRoles)]
