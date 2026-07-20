@@ -4,6 +4,7 @@ using Dobi.Application.Features.Orders.GetEligibleOutletReturnOrders;
 using Dobi.Application.Features.Orders.GetEligiblePaymentOrders;
 using Dobi.Application.Features.Orders.GetEligiblePlantProcessingOrders;
 using Dobi.Application.Features.Orders.GetEligiblePlantTransferOrders;
+using Dobi.Application.Features.Orders.GetEligibleRefundOrders;
 using Dobi.Application.Features.Orders.GetOrderById;
 using Dobi.Application.Features.Orders.GetOrders;
 using Dobi.Application.Features.Orders.GetOrderStatusHistory;
@@ -211,6 +212,33 @@ public sealed class OrdersController : ControllerBase
         return Ok(ApiResponse<PagedResponse<EligiblePaymentOrderResponse>>.Ok(
             response,
             "Eligible payment orders loaded successfully."));
+    }
+
+    [HttpGet("eligible-for-refund")]
+    public async Task<ActionResult<ApiResponse<PagedResponse<EligibleRefundOrderResponse>>>> GetEligibleForRefund(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string? searchTerm = null,
+    [FromQuery] int? customerId = null,
+    [FromQuery] int? branchId = null,
+    [FromQuery] int? customerTypeId = null,
+    [FromQuery] int[]? excludeOrderIds = null,
+    CancellationToken cancellationToken = default)
+    {
+        var response = await _mediator.Send(
+            new GetEligibleRefundOrdersQuery(
+                pageNumber,
+                pageSize,
+                searchTerm,
+                customerId,
+                branchId,
+                customerTypeId,
+                excludeOrderIds ?? Array.Empty<int>()),
+            cancellationToken);
+
+        return Ok(ApiResponse<PagedResponse<EligibleRefundOrderResponse>>.Ok(
+            response,
+            "Eligible refund orders loaded successfully."));
     }
 
     [Authorize(Roles = OrderWriteRoles)]
