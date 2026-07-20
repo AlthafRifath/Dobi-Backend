@@ -1,7 +1,4 @@
 ﻿using Dobi.Shared.Pagination;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dobi.Application.Abstractions.Authentication
 {
@@ -30,6 +27,9 @@ namespace Dobi.Application.Abstractions.Authentication
 
         Task<IReadOnlyCollection<string>> GetRolesAsync(
             int userId,
+            CancellationToken cancellationToken = default);
+
+        Task<IReadOnlyCollection<IdentityRoleInfo>> GetAllRolesAsync(
             CancellationToken cancellationToken = default);
 
         Task<IdentityUserInfo> CreateUserAsync(

@@ -13,10 +13,12 @@ namespace Dobi.Infrastructure.Authentication
     public sealed class IdentityService : IIdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public IdentityService(UserManager<ApplicationUser> userManager)
+        public IdentityService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<IdentityUserInfo?> FindByUserNameOrEmailAsync(
@@ -234,6 +236,36 @@ namespace Dobi.Infrastructure.Authentication
                 user.IsActive,
                 user.DefaultBranchId,
                 user.DefaultPlantId);
+        }
+
+        public async Task<IReadOnlyCollection<IdentityRoleInfo>> GetAllRolesAsync(CancellationToken cancellationToken = default)
+        {
+            var roles = await _roleManager.Roles
+                .AsNoTracking()
+                .OrderBy(x => x.Id)
+                .Select(x => new IdentityRoleInfo(
+                    x.Id,
+                    x.Name ?? string.Empty,
+                    ToDisplayName(x.Name ?? string.Empty),
+                    x.Description,
+                    x.IsActive))
+                .ToArrayAsync(cancellationToken);
+
+            return roles;
+        }
+
+        private static string ToDisplayName(string roleCode)
+        {
+            return roleCode switch
+            {
+                "ADMIN" => "Admin",
+                "OUTLET_STAFF" => "Outlet Staff",
+                "PLANT_SUPERVISOR" => "Plant Supervisor",
+                "DRIVER" => "Driver",
+                "MANAGER" => "Manager",
+                "OPERATIONS_DIRECTOR" => "Operations Director",
+                _ => roleCode.Replace("_", " ")
+            };
         }
     }
 }

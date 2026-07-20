@@ -1,4 +1,5 @@
 ﻿using Dobi.Application.Features.Lookups.GetLookupValues;
+using Dobi.Application.Features.Lookups.GetRoles;
 using Dobi.Contracts.Common;
 using Dobi.Contracts.Lookups;
 using Dobi.Shared.Constants;
@@ -198,6 +199,19 @@ public sealed class LookupsController : ControllerBase
             LookupTypes.NotificationStatuses,
             "Notification statuses loaded successfully.",
             cancellationToken);
+    }
+
+    [HttpGet("roles")]
+    public async Task<ActionResult<ApiResponse<IReadOnlyCollection<RoleLookupResponse>>>> GetRoles(
+    CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(
+            new GetRolesLookupQuery(),
+            cancellationToken);
+
+        return Ok(ApiResponse<IReadOnlyCollection<RoleLookupResponse>>.Ok(
+            response,
+            "Roles loaded successfully."));
     }
 
     private async Task<ActionResult<ApiResponse<IReadOnlyCollection<LookupResponse>>>> GetLookupAsync(
