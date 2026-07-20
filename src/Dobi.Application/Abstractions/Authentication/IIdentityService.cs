@@ -40,6 +40,10 @@ namespace Dobi.Application.Abstractions.Authentication
             PageRequest pageRequest,
             CancellationToken cancellationToken = default);
 
+        Task<PagedResult<IdentityUserInfo>> SearchUsersAsync(
+            IdentityUserSearchRequest request,
+            CancellationToken cancellationToken = default);
+
         Task<IdentityUserInfo?> UpdateUserStatusAsync(
             int userId,
             bool isActive,

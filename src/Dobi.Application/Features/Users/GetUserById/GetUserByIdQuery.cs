@@ -1,8 +1,5 @@
-﻿using Dobi.Contracts.Auth;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MediatR;
+using UserResponse = Dobi.Contracts.Users.UserResponse;
 
 namespace Dobi.Application.Features.Users.GetUserById
 {

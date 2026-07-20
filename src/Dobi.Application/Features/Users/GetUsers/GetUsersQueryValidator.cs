@@ -1,7 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dobi.Application.Features.Users.GetUsers
 {
@@ -17,6 +14,17 @@ namespace Dobi.Application.Features.Users.GetUsers
 
             RuleFor(x => x.SearchTerm)
                 .MaximumLength(150);
+
+            RuleForEach(x => x.RoleCodes)
+                .MaximumLength(100);
+
+            RuleFor(x => x.BranchId)
+                .GreaterThan(0)
+                .When(x => x.BranchId.HasValue);
+
+            RuleFor(x => x.PlantId)
+                .GreaterThan(0)
+                .When(x => x.PlantId.HasValue);
         }
     }
 }

@@ -12,5 +12,8 @@ namespace Dobi.Application.Abstractions.Authentication
         string? PhoneNumber,
         bool IsActive,
         int? DefaultBranchId,
-        int? DefaultPlantId);
+        int? DefaultPlantId,
+        IReadOnlyCollection<IdentityUserRoleInfo>? Roles = null,
+        IReadOnlyCollection<IdentityUserBranchAssignmentInfo>? BranchAssignments = null,
+        IReadOnlyCollection<IdentityUserPlantAssignmentInfo>? PlantAssignments = null);
 }

@@ -2,12 +2,14 @@
 using Dobi.Application.Features.Users.GetUserById;
 using Dobi.Application.Features.Users.GetUsers;
 using Dobi.Application.Features.Users.UpdateUserStatus;
-using Dobi.Contracts.Auth;
 using Dobi.Contracts.Common;
 using Dobi.Shared.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CreateUserRequest = Dobi.Contracts.Auth.CreateUserRequest;
+using UpdateUserStatusRequest = Dobi.Contracts.Auth.UpdateUserStatusRequest;
+using UserResponse = Dobi.Contracts.Users.UserResponse;
 
 namespace Dobi.Api.Controllers;
 
@@ -28,16 +30,24 @@ public sealed class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ApiResponse<PagedResponse<UserResponse>>>> GetUsers(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string? searchTerm = null,
-        CancellationToken cancellationToken = default)
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string? searchTerm = null,
+    [FromQuery] string[]? roleCodes = null,
+    [FromQuery] bool? isActive = null,
+    [FromQuery] int? branchId = null,
+    [FromQuery] int? plantId = null,
+    CancellationToken cancellationToken = default)
     {
         var response = await _mediator.Send(
             new GetUsersQuery(
                 pageNumber,
                 pageSize,
-                searchTerm),
+                searchTerm,
+                roleCodes ?? Array.Empty<string>(),
+                isActive,
+                branchId,
+                plantId),
             cancellationToken);
 
         return Ok(ApiResponse<PagedResponse<UserResponse>>.Ok(

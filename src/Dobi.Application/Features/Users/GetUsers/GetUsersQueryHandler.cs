@@ -1,16 +1,12 @@
 ﻿using Dobi.Application.Abstractions.Authentication;
-using Dobi.Contracts.Auth;
 using Dobi.Contracts.Common;
-using Dobi.Shared.Pagination;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using UserResponse = Dobi.Contracts.Users.UserResponse;
 
 namespace Dobi.Application.Features.Users.GetUsers
 {
     public sealed class GetUsersQueryHandler
-    : IRequestHandler<GetUsersQuery, PagedResponse<UserResponse>>
+        : IRequestHandler<GetUsersQuery, PagedResponse<UserResponse>>
     {
         private readonly IIdentityService _identityService;
 
@@ -23,45 +19,32 @@ namespace Dobi.Application.Features.Users.GetUsers
             GetUsersQuery request,
             CancellationToken cancellationToken)
         {
-            var pageRequest = new PageRequest
-            {
-                PageNumber = request.PageNumber,
-                PageSize = request.PageSize,
-                SearchTerm = request.SearchTerm
-            };
-
-            var pagedUsers = await _identityService.GetUsersAsync(
-                pageRequest,
+            var pagedUsers = await _identityService.SearchUsersAsync(
+                new IdentityUserSearchRequest(
+                    request.PageNumber,
+                    request.PageSize,
+                    request.SearchTerm,
+                    request.RoleCodes,
+                    request.IsActive,
+                    request.BranchId,
+                    request.PlantId),
                 cancellationToken);
 
-            var users = new List<UserResponse>();
+            var items = pagedUsers.Items
+                .Select(user => UserResponseMapper.Map(user))
+                .ToArray();
 
-            foreach (var user in pagedUsers.Items)
-            {
-                var roles = await _identityService.GetRolesAsync(
-                    user.UserId,
-                    cancellationToken);
-
-                users.Add(new UserResponse(
-                    user.UserId,
-                    user.FullName,
-                    user.UserName,
-                    user.Email,
-                    user.PhoneNumber,
-                    user.IsActive,
-                    roles,
-                    user.DefaultBranchId,
-                    user.DefaultPlantId));
-            }
+            var totalPages = (int)Math.Ceiling(
+                pagedUsers.TotalCount / (double)request.PageSize);
 
             return new PagedResponse<UserResponse>(
-                users,
+                items,
                 pagedUsers.TotalCount,
-                pagedUsers.PageNumber,
-                pagedUsers.PageSize,
-                pagedUsers.TotalPages,
-                pagedUsers.HasPreviousPage,
-                pagedUsers.HasNextPage);
+                request.PageNumber,
+                request.PageSize,
+                totalPages,
+                request.PageNumber > 1,
+                request.PageNumber < totalPages);
         }
     }
 }

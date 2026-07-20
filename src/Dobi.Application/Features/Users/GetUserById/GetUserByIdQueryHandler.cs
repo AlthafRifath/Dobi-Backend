@@ -1,15 +1,12 @@
 ﻿using Dobi.Application.Abstractions.Authentication;
-using Dobi.Contracts.Auth;
 using Dobi.Shared.Exceptions;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using UserResponse = Dobi.Contracts.Users.UserResponse;
 
 namespace Dobi.Application.Features.Users.GetUserById
 {
     public sealed class GetUserByIdQueryHandler
-    : IRequestHandler<GetUserByIdQuery, UserResponse>
+        : IRequestHandler<GetUserByIdQuery, UserResponse>
     {
         private readonly IIdentityService _identityService;
 
@@ -32,19 +29,10 @@ namespace Dobi.Application.Features.Users.GetUserById
             }
 
             var roles = await _identityService.GetRolesAsync(
-                user.UserId,
+                request.UserId,
                 cancellationToken);
 
-            return new UserResponse(
-                user.UserId,
-                user.FullName,
-                user.UserName,
-                user.Email,
-                user.PhoneNumber,
-                user.IsActive,
-                roles,
-                user.DefaultBranchId,
-                user.DefaultPlantId);
+            return UserResponseMapper.Map(user, roles);
         }
     }
 }
