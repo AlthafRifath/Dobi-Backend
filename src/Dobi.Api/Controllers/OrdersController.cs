@@ -1,6 +1,7 @@
 ﻿using Dobi.Application.Features.Orders.CancelOrder;
 using Dobi.Application.Features.Orders.CreateOrder;
 using Dobi.Application.Features.Orders.GetEligibleOutletReturnOrders;
+using Dobi.Application.Features.Orders.GetEligiblePlantProcessingOrders;
 using Dobi.Application.Features.Orders.GetEligiblePlantTransferOrders;
 using Dobi.Application.Features.Orders.GetOrderById;
 using Dobi.Application.Features.Orders.GetOrders;
@@ -153,6 +154,35 @@ public sealed class OrdersController : ControllerBase
         return Ok(ApiResponse<PagedResponse<EligibleOutletReturnOrderResponse>>.Ok(
             response,
             "Eligible outlet return orders loaded successfully."));
+    }
+
+    [HttpGet("eligible-for-plant-processing")]
+    public async Task<ActionResult<ApiResponse<PagedResponse<EligiblePlantProcessingOrderResponse>>>> GetEligibleForPlantProcessing(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string? searchTerm = null,
+    [FromQuery] int plantId = 0,
+    [FromQuery] int? customerId = null,
+    [FromQuery] int? branchId = null,
+    [FromQuery] int? customerTypeId = null,
+    [FromQuery] int[]? excludeOrderIds = null,
+    CancellationToken cancellationToken = default)
+    {
+        var response = await _mediator.Send(
+            new GetEligiblePlantProcessingOrdersQuery(
+                pageNumber,
+                pageSize,
+                searchTerm,
+                plantId,
+                customerId,
+                branchId,
+                customerTypeId,
+                excludeOrderIds ?? Array.Empty<int>()),
+            cancellationToken);
+
+        return Ok(ApiResponse<PagedResponse<EligiblePlantProcessingOrderResponse>>.Ok(
+            response,
+            "Eligible plant processing orders loaded successfully."));
     }
 
     [Authorize(Roles = OrderWriteRoles)]
