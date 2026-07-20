@@ -35,6 +35,12 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 
+    // Fix Swagger schema name conflicts.
+    // Example:
+    // Dobi.Contracts.Auth.UserResponse
+    // Dobi.Contracts.Users.UserResponse
+    options.CustomSchemaIds(type => type.FullName?.Replace("+", ".") ?? type.Name);
+
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
