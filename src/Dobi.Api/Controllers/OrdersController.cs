@@ -1,6 +1,7 @@
 ﻿using Dobi.Application.Features.Orders.CancelOrder;
 using Dobi.Application.Features.Orders.CreateOrder;
 using Dobi.Application.Features.Orders.GetEligibleOutletReturnOrders;
+using Dobi.Application.Features.Orders.GetEligiblePaymentOrders;
 using Dobi.Application.Features.Orders.GetEligiblePlantProcessingOrders;
 using Dobi.Application.Features.Orders.GetEligiblePlantTransferOrders;
 using Dobi.Application.Features.Orders.GetOrderById;
@@ -183,6 +184,33 @@ public sealed class OrdersController : ControllerBase
         return Ok(ApiResponse<PagedResponse<EligiblePlantProcessingOrderResponse>>.Ok(
             response,
             "Eligible plant processing orders loaded successfully."));
+    }
+
+    [HttpGet("eligible-for-payment")]
+    public async Task<ActionResult<ApiResponse<PagedResponse<EligiblePaymentOrderResponse>>>> GetEligibleForPayment(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string? searchTerm = null,
+    [FromQuery] int? branchId = null,
+    [FromQuery] int? customerId = null,
+    [FromQuery] int? customerTypeId = null,
+    [FromQuery] int[]? excludeOrderIds = null,
+    CancellationToken cancellationToken = default)
+    {
+        var response = await _mediator.Send(
+            new GetEligiblePaymentOrdersQuery(
+                pageNumber,
+                pageSize,
+                searchTerm,
+                branchId,
+                customerId,
+                customerTypeId,
+                excludeOrderIds ?? Array.Empty<int>()),
+            cancellationToken);
+
+        return Ok(ApiResponse<PagedResponse<EligiblePaymentOrderResponse>>.Ok(
+            response,
+            "Eligible payment orders loaded successfully."));
     }
 
     [Authorize(Roles = OrderWriteRoles)]
