@@ -1,5 +1,6 @@
 ﻿using Dobi.Application.Features.Orders.CancelOrder;
 using Dobi.Application.Features.Orders.CreateOrder;
+using Dobi.Application.Features.Orders.GetEligiblePlantTransferOrders;
 using Dobi.Application.Features.Orders.GetOrderById;
 using Dobi.Application.Features.Orders.GetOrders;
 using Dobi.Application.Features.Orders.GetOrderStatusHistory;
@@ -99,6 +100,33 @@ public sealed class OrdersController : ControllerBase
         return Ok(ApiResponse<IReadOnlyCollection<OrderStatusHistoryResponse>>.Ok(
             response,
             "Order status history loaded successfully."));
+    }
+
+    [HttpGet("eligible-for-plant-transfer")]
+    public async Task<ActionResult<ApiResponse<PagedResponse<EligiblePlantTransferOrderResponse>>>> GetEligibleForPlantTransfer(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string? searchTerm = null,
+    [FromQuery] int fromBranchId = 0,
+    [FromQuery] int toPlantId = 0,
+    [FromQuery] int? customerTypeId = null,
+    [FromQuery] int[]? excludeOrderIds = null,
+    CancellationToken cancellationToken = default)
+    {
+        var response = await _mediator.Send(
+            new GetEligiblePlantTransferOrdersQuery(
+                pageNumber,
+                pageSize,
+                searchTerm,
+                fromBranchId,
+                toPlantId,
+                customerTypeId,
+                excludeOrderIds ?? Array.Empty<int>()),
+            cancellationToken);
+
+        return Ok(ApiResponse<PagedResponse<EligiblePlantTransferOrderResponse>>.Ok(
+            response,
+            "Eligible plant transfer orders loaded successfully."));
     }
 
     [Authorize(Roles = OrderWriteRoles)]
